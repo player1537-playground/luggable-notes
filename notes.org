@@ -1,0 +1,32 @@
+* Executable format
+** Called the MZ Executable Format
+   [http://en.wikipedia.org/wiki/DOS_MZ_executable]
+** In a wiki format for OS development
+   [http://wiki.osdev.org/MZ]
+** And in C format, reproduced below with notes
+   [http://www.delorie.com/djgpp/doc/exe/]
+
+   #+NAME: MZ Format
+   #+BEGIN_SRC C
+     struct EXE {
+       unsigned short signature; /* == 0x5a4D */
+       unsigned short bytes_in_last_block; /* = 0 */
+       unsigned short blocks_in_file;
+       unsigned short num_relocs;
+       unsigned short header_paragraphs;
+       unsigned short min_extra_paragraphs;
+       unsigned short max_extra_paragraphs;
+       unsigned short ss;
+       unsigned short sp;
+       unsigned short checksum;
+       unsigned short ip;
+       unsigned short cs;
+       unsigned short reloc_table_offset;
+       unsigned short overlay_number;
+     };
+
+     struct EXE_RELOC {
+       unsigned short offset;
+       unsigned short segment;
+     };
+   #+END_SRC
