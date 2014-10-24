@@ -8,14 +8,17 @@
 
    #+NAME: MZ Format
    #+BEGIN_SRC C
+     #define PARAGRAPH = 16
+     #define BLOCK 512
+
      struct EXE {
        unsigned short signature; /* == 0x5a4D */
-       unsigned short bytes_in_last_block; /* = 0 */
-       unsigned short blocks_in_file;
-       unsigned short num_relocs;
-       unsigned short header_paragraphs;
-       unsigned short min_extra_paragraphs;
-       unsigned short max_extra_paragraphs;
+       unsigned short bytes_in_last_block; /* = 0 (use full page) */
+       unsigned short blocks_in_file; /* = CEILING(program_size / BLOCK) */
+       unsigned short num_relocs; /* = 1 (typically) */
+       unsigned short header_paragraphs; /* = PARAGRAPH * (num_relocs + 1) */
+       unsigned short min_extra_paragraphs; /* = 0 */
+       unsigned short max_extra_paragraphs; /* = 0 */
        unsigned short ss;
        unsigned short sp;
        unsigned short checksum;
@@ -30,3 +33,54 @@
        unsigned short segment;
      };
    #+END_SRC
+* Emulating the IBM PC
+** 8086tiny
+   [http://www.megalith.co.uk/8086tiny/]
+
+   Should be a very good piece of software to use to test everything and get a
+   working demo going before we move everything to the luggables.
+
+   #+NAME: build-8086.bash
+   #+BEGIN_SRC sh
+     dir=build/8086tiny
+
+     if [ ! -e $dir ]; then
+         git clone https://github.com/adriancable/8086tiny $dir
+     fi
+
+     cd $dir
+
+     make no_graphics
+   #+END_SRC
+* Assembling Code
+** MASM 16
+   Google search for "masm16 download"
+   [http://www.masmforum.com/board/index.php?PHPSESSID=786dd40408172108b65a5a36b09c88c0&topic=2689.0]
+   [http://www.prashanthpai.com/pesse/mp_lab/8086_Assembler.zip]
+
+   This is the assembler recommended in [1]
+* Moving files to the IBM PC
+** Plugging the floppy drive in to a different desktop
+   One solution is to take another computer and put the IBM PC's floppy drive
+   into a different computer, which should be able to read/write to the floppy
+   disk, if the BIOS supports it and if we have the right cabling.
+
+   Need a Shugart (which is now called Seagate) connector:
+   [http://en.wikipedia.org/wiki/ST-506]
+   from here:
+   [http://www.amazon.com/StarTech-com-32-Inch-Universal-Floppy-FDAT/dp/B00066HOX4]
+** Get a floppy drive emulator
+   [http://en.wikipedia.org/wiki/Floppy_disk_hardware_emulator]
+   If we can get one of these, it will be much easier to move files to and from
+   the luggable.
+** Just retype everything
+   A final alternative is to retype everything, and make a small hex editor,
+   similar to HexIt or XVI at
+   [http://thestarman.pcministry.com/tool/HexEds.htm]
+* References
+  - [1] _Programming the IBM Personal Computer_ by Chien
+    Hodges: QA 76.8 .12594C45 1984
+  - [2] _The 8088 and 8086 Microprocessors_ by Triebel Singh
+    Hodges: QA 76.8 .129283 T74 2003
+  - [3] _8086 Book_ by Rector
+    Hodges: QA 76.8 I292R43 1980
