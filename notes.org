@@ -21,7 +21,7 @@
        unsigned short max_extra_paragraphs; /* = 0 */
        unsigned short ss;
        unsigned short sp;
-       unsigned short checksum;
+       unsigned short checksum; /* = 0 (usually not used) */
        unsigned short ip;
        unsigned short cs;
        unsigned short reloc_table_offset;
